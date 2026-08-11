@@ -3,284 +3,555 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Research Tools</title>
+<title>Calculators — Tools & Resources</title>
 <style>
-  body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: #f9f9f9;
+  :root{
+    --navy:#041E42;
+    --navy-deep:#020f21;
+    --gold:#D8AA00;
+    --gold-deep:#9c7a00;
+    --keaney:#68ABE8;
+    --paper:#f4f6f8;
+    --card:#ffffff;
+    --ink:#1c2833;
+    --ink-soft:#4a5a6a;
+    --line:#dfe3e6;
+    --pre:#041E42;
+    --pre-accent:#1f5c94;
+    --post:#8a5a2b;
+    --pre-bg:#eaf1f8;
+    --post-bg:#f7efe4;
   }
-  button {
-    padding: 10px 15px;
-    margin: 5px 0;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:Arial, Helvetica, "Segoe UI", sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    padding:0;
   }
-  button:hover {
-    background: #f0f0f0;
-    border-color: #041E42;
+  .container{max-width:920px; margin:0 auto; padding:20px;}
+
+  /* Tool Cards Grid */
+  .tools-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
   }
-  .panel {
-    display: none;
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin: 15px 0;
-    background: #f9f9f9;
-    border-radius: 4px;
+  .tool-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px 14px;
+    text-align:left;
+    text-decoration:none;
+    cursor:pointer;
+    font-family:inherit;
+    display:block;
+    transition:box-shadow .15s ease, border-color .15s ease;
   }
-  .panel.open {
-    display: block;
+  .tool-card:hover{
+    border-color:var(--gold);
+    box-shadow:0 2px 10px rgba(15,53,87,0.08);
   }
-  .panel h3 {
-    margin-top: 0;
-    color: #041E42;
+  .tool-card:focus{ outline:2px solid var(--keaney); outline-offset:2px; }
+  .tool-icon{
+    width:30px; height:30px;
+    color:var(--pre-accent);
+    margin-bottom:12px;
   }
-  .close-btn {
-    float: right;
-    background: none;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0;
-    width: auto;
+  .tool-title{
+    font-size:13.5px;
+    font-weight:700;
+    color:var(--navy-deep);
+    margin-bottom:5px;
+    line-height:1.3;
   }
-  label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-    color: #041E42;
+  .tool-desc{
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.4;
   }
-  input, select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: inherit;
-    box-sizing: border-box;
+
+  /* Calculator Panels */
+  .tool-panel{
+    display:none;
+    margin-top:18px;
+    background:var(--pre-bg);
+    border:1px solid #b9cfe3;
+    border-radius:8px;
+    padding:20px 22px 24px;
   }
-  input[type="number"] {
-    max-width: 300px;
+  .tool-panel.open{ display:block; }
+  .panel-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:14px;
   }
-  .results {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 2px solid #333;
+  .panel-head h3{
+    margin:0;
+    font-size:16px;
+    color:var(--navy-deep);
   }
-  .result-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
+  .panel-close{
+    background:none;
+    border:none;
+    font-size:13px;
+    color:var(--navy);
+    cursor:pointer;
+    font-family:inherit;
+    font-weight:600;
   }
-  .result-row.total {
-    font-weight: bold;
-    border-top: 2px solid #333;
-    margin-top: 10px;
-    padding-top: 10px;
-    background: #eee;
-    padding: 10px;
+  
+  /* Form Elements in Panels */
+  .field-label{
+    display:block;
+    font-size:12px;
+    font-weight:600;
+    color:var(--navy-deep);
+    margin:12px 0 5px;
   }
-  .personnel-row {
-    display: grid;
-    grid-template-columns: 2fr 1fr 0.8fr auto;
-    gap: 8px;
-    margin-bottom: 10px;
-    align-items: end;
+  .field-label.small{ margin-top:12px; font-weight:600; font-size:11.5px; color:var(--ink-soft); text-transform:none; }
+  
+  .personnel-row{
+    display:grid;
+    grid-template-columns:1.3fr 1fr 0.7fr auto;
+    gap:10px;
+    align-items:end;
+    margin-bottom:10px;
   }
-  .personnel-row select, .personnel-row input {
-    margin: 0;
+  .personnel-row .mini-label{
+    font-size:10.5px;
+    color:var(--ink-soft);
+    display:block;
+    margin-bottom:3px;
   }
-  .remove-btn {
-    width: auto;
-    padding: 8px 10px;
-    background: #fff;
-    border: 1px solid #ccc;
+  .personnel-row select, .personnel-row input{
+    width:100%;
+    padding:8px 9px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:13px;
+    font-family:inherit;
+    background:#fff;
   }
-  .add-btn {
-    width: auto;
-    background: #fff;
-    border: 1px dashed #041E42;
-    color: #041E42;
-    margin-bottom: 15px;
+  .remove-row-btn{
+    background:none;
+    border:1px solid var(--line);
+    border-radius:4px;
+    color:#9c3b3b;
+    font-size:12px;
+    padding:8px 10px;
+    cursor:pointer;
+    font-family:inherit;
   }
-  .panel-note {
-    font-size: 12px;
-    color: #666;
-    font-style: italic;
-    margin: 10px 0;
+  .add-row-btn{
+    background:none;
+    border:1px dashed var(--navy);
+    color:var(--navy);
+    border-radius:4px;
+    font-size:12.5px;
+    font-weight:600;
+    padding:7px 12px;
+    cursor:pointer;
+    font-family:inherit;
+    margin-bottom:6px;
+  }
+  .field-input{
+    width:100%;
+    padding:9px 10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    font-size:14px;
+    font-family:inherit;
+    background:#fff;
+  }
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+  }
+  .panel-note{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin-top:10px;
+  }
+
+  /* Results List */
+  .results-list{
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px dashed #b9cfe3;
+  }
+  .result-row{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+    font-size:13.5px;
+  }
+  .result-row .label{ color:var(--ink-soft); }
+  .result-row .value{ font-weight:700; color:var(--navy-deep); }
+  .result-row.total{
+    border-top:1px solid #b9cfe3;
+    margin-top:6px;
+    padding-top:10px;
+    font-size:15px;
+  }
+  .result-row.total .value{ color:var(--gold-deep); }
+
+  /* Library Section */
+  .library{
+    margin:28px 0 0;
+    transition:opacity 0.3s ease, max-height 0.3s ease;
+  }
+  .library.hidden{
+    display:none;
+  }
+  .library h2{
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--navy-deep);
+    font-weight:700;
+    margin:0 0 18px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:10px;
+  }
+  .lib-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:20px;
+  }
+  .lib-col h4{
+    font-size:13px;
+    color:var(--gold-deep);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    margin:0 0 10px;
+  }
+  .lib-col ul{
+    list-style:none;
+    margin:0; padding:0;
+  }
+  .lib-col li{ margin-bottom:9px; }
+  .lib-col a{
+    font-size:13.5px;
+    color:var(--navy);
+    text-decoration:none;
+    line-height:1.4;
+  }
+  .lib-col a:hover{ text-decoration:underline; }
+
+  /* Media Queries */
+  @media (max-width:600px){
+    .tools-grid{ grid-template-columns:1fr; }
+    .personnel-row{ grid-template-columns:1fr; gap:5px; }
+    .field-row{ grid-template-columns:1fr; }
+    .lib-grid{ grid-template-columns:1fr; }
   }
 </style>
 </head>
 <body>
 
-<h2 style="color: #041E42;">Tools & Resources</h2>
+<div class="container">
 
-<!-- Timeline Calculator -->
-<div>
-  <button onclick="togglePanel('timeline')">
-    <strong>Proposal Timeline Calculator</strong><br>
-    <span style="font-size: 12px; color: #666;">Plan backwards from your sponsor deadline</span>
-  </button>
-  
-  <div id="timeline" class="panel">
-    <button class="close-btn" onclick="togglePanel('timeline')">✕</button>
-    <h3>Proposal Timeline Calculator</h3>
-    
-    <label for="deadline-input">Sponsor submission deadline:</label>
-    <input type="date" id="deadline-input" onchange="renderTimeline()">
-    
-    <div class="panel-note">Counts business days (Mon–Fri) and excludes RI state holidays (2026).</div>
-    <div id="timeline-results" class="results"></div>
+  <!-- Tools Section -->
+  <div class="tools">
+    <div class="tools-grid">
+      <!-- Interactive Tool 1: Timeline Calculator -->
+      <button class="tool-card" data-tool="timeline" type="button">
+        <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4.5" width="18" height="16" rx="2"/><line x1="3" y1="9.5" x2="21" y2="9.5"/><line x1="8" y1="2.5" x2="8" y2="6.5"/><line x1="16" y1="2.5" x2="16" y2="6.5"/></svg>
+        <div class="tool-title">Proposal Timeline Calculator</div>
+        <div class="tool-desc">Plan backwards from your sponsor deadline.</div>
+      </button>
+      
+      <!-- Interactive Tool 2: Budget Estimator -->
+      <button class="tool-card" data-tool="budget" type="button">
+        <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="7.5" x2="16" y2="7.5"/><line x1="7" y1="12" x2="9" y2="12"/><line x1="11" y1="12" x2="13" y2="12"/><line x1="15" y1="12" x2="17" y2="12"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="11" y1="16" x2="13" y2="16"/><line x1="15" y1="16" x2="17" y2="16"/></svg>
+        <div class="tool-title">Budget Estimator</div>
+        <div class="tool-desc">Estimate salary, fringe, and F&amp;A costs.</div>
+      </button>
+    </div>
+
+    <!-- Panel: Timeline Calculator -->
+    <div class="tool-panel" id="panel-timeline">
+      <div class="panel-head">
+        <h3>Proposal Timeline Calculator</h3>
+        <button class="panel-close" data-close="timeline" type="button">Close ×</button>
+      </div>
+      <div class="panel-body">
+        <label class="field-label" for="deadline-input">Sponsor submission deadline</label>
+        <input type="date" id="deadline-input" class="field-input">
+        <div class="panel-note">Counts business days (Mon–Fri) and excludes official Rhode Island state holidays. List reflects 2026 dates from sos.ri.gov — update yearly.</div>
+        <div id="timeline-results" class="results-list"></div>
+      </div>
+    </div>
+
+    <!-- Panel: Budget Estimator -->
+    <div class="tool-panel" id="panel-budget">
+      <div class="panel-head">
+        <h3>Budget Estimator</h3>
+        <button class="panel-close" data-close="budget" type="button">Close ×</button>
+      </div>
+      <div class="panel-body">
+        <div class="field-label" style="margin-top:0;">Personnel</div>
+        <div id="personnel-rows"></div>
+        <button type="button" id="add-personnel" class="add-row-btn">+ Add person</button>
+
+        <div class="field-label">Non-personnel direct costs ($)</div>
+        <div class="field-row">
+          <div>
+            <label class="field-label small" for="equip-input">Equipment (over $5,000) — excluded from F&amp;A base</label>
+            <input type="number" id="equip-input" class="field-input" value="0" min="0" step="500">
+          </div>
+          <div>
+            <label class="field-label small" for="travel-input">Travel</label>
+            <input type="number" id="travel-input" class="field-input" value="0" min="0" step="500">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label class="field-label small" for="participant-input">Participant support — excluded from F&amp;A base</label>
+            <input type="number" id="participant-input" class="field-input" value="0" min="0" step="500">
+          </div>
+          <div>
+            <label class="field-label small" for="other-direct-input">Materials, supplies &amp; other</label>
+            <input type="number" id="other-direct-input" class="field-input" value="0" min="0" step="500">
+          </div>
+        </div>
+        <label class="field-label small" for="subaward-input">Subaward total — only the first $25,000 per subaward counts toward the F&amp;A base</label>
+        <input type="number" id="subaward-input" class="field-input" value="0" min="0" step="1000">
+
+        <label class="field-label" for="fa-input">F&amp;A rate</label>
+<select id="fa-input" class="field-input">
+  <option value="57.5">On-campus — 57.5%</option>
+  <option value="26">Off-campus — 26%</option>
+  <option value="custom">Custom — enter rate</option>
+</select>
+<input type="number" id="fa-custom-input" class="field-input" placeholder="Enter F&A rate (%)" min="0" max="100" step="0.1" style="display:none; margin-top:8px;">
+
+        <div class="panel-note">Year 1 estimate only, modeled on the CELS Budget Template's MTDC logic (equipment, participant support, and the portion of subawards over $25K are excluded from the F&amp;A base).</div>
+        <div id="budget-results" class="results-list"></div>
+      </div>
+    </div>
+  </div>
+
+<!-- Forms & Resources Library -->
+<div class="library" id="resources-library">
+  <h2>Forms &amp; resources library</h2>
+  <div class="lib-grid">
+    <div class="lib-col">
+      <h4>Proposal development</h4>
+      <ul>
+        <li><a href="https://forms.office.com/r/csr5UBWmt6" target="_blank" rel="noopener noreferrer">Pre-Award Form</a></li>
+        <li><a href="https://uri0.sharepoint.com/:w:/r/sites/DREDPolicyRevisions/_layouts/15/Doc.aspx?sourcedoc=%7B6A3F3418-7287-42AC-AAA7-ED0A7A1849E0%7D&file=Roles%20and%20Responsibilities%20Matrix%20.doc&action=default&mobileredirect=true" target="_blank" rel="noopener noreferrer">Proposal Roles &amp; Responsibilities</a></li>
+        <li><a href="https://peaceful-cactus-1e4e21.netlify.app/#" target="_blank" rel="noopener noreferrer">Submission Timeline Flow Chart</a></li>
+        <li><a href="https://web.uri.edu/research-admin/wp-content/uploads/sites/922/LOI-Template.docx" target="_blank" rel="noopener noreferrer">Letter of Intent / Commitment Template</a></li>
+        <li><a href="https://web.uri.edu/research-admin/forms/" target="_blank" rel="noopener noreferrer">University Approved Forms/Documents/</a></li>
+      </ul>
+    </div>
+    <div class="lib-col">
+      <h4>Budget &amp; compliance</h4>
+      <ul>
+        <li><a href="https://docs.google.com/spreadsheets/d/1fR1-0ojoZETZGWAqMongUOFKqx8Qgwoj/edit?usp=sharing&ouid=110828483247448966407&rtpof=true&sd=true" target="_blank" rel="noopener noreferrer">CELS Budget Template (Excel) — full multi-year builder</a></li>
+        <li><a href="https://forms.office.com/r/DYZpRchxB9" target="_blank" rel="noopener noreferrer">CELS Budget Revision Request (BRR)</a></li>
+        <li><a href="https://uri0.sharepoint.com/sites/DREDPolicyRevisions/Shared%20Documents/Forms/AllItems.aspx?sharingv2=true&fromShare=true&at=9&CID=16b0633b%2Dabfa%2D49b7%2Db92c%2Df186506017a0&FolderCTID=0x012000B2A75D21426F804890E2E8D0BD134AE0&id=%2Fsites%2FDREDPolicyRevisions%2FShared%20Documents%2FWebsite%20Documents%2FOSP%20Pre%20Award%2FFacilities%20and%20Administrative%20Indirect%20Overhead%20Cost%20Rates%2Epdf&viewid=7776ef43%2Dd77f%2D4837%2D8bad%2D1877975df231&parent=%2Fsites%2FDREDPolicyRevisions%2FShared%20Documents%2FWebsite%20Documents%2FOSP%20Pre%20Award" target="_blank" rel="noopener noreferrer">F&amp;A Rate Agreement (current)</a></li>
+        <li><a href="https://web.uri.edu/research-admin/manage-an-award/cost-sharing/" target="_blank" rel="noopener noreferrer">Cost Share / Match Guidance</a></li>
+      </ul>
+    </div>
+    <div class="lib-col">
+      <h4>Award management</h4>
+      <ul>
+        <li><a href="https://urldefense.com/v3/__https://docs.google.com/forms/d/e/1FAIpQLSdP8n6IzjJPDXESqndzrt-7QhDYHL1DcOooTpJUaKj6rgkRww/viewform__;!!Jh1S!iAlcvLbO4f9leF-QVcUMzO-YTfeGmZqp_bC2T6RMhTpMM34QBb3qQRXmvO9ghNCMxM5KucfCZY7YO_cbhihcAGXCJpXNfDQ$" target="_blank" rel="noopener noreferrer">No-Cost Extension Request Form</a></li>
+        <li><a href="https://web.uri.edu/research-admin/manage-an-award/allowable-vs-unallowable-costs/" target="_blank" rel="noopener noreferrer">Allowable vs. Unallowable Costs</a></li>      
+      </ul>
+    </div>
+    <div class="lib-col">
+      <h4>Closeout</h4>
+      <ul>
+        <li><a href="https://web.uri.edu/research-admin/close-an-award/" target="_blank" rel="noopener noreferrer">Grant Closeout Guide</a></li>
+      </ul>
+    </div>
   </div>
 </div>
 
-<!-- Budget Estimator -->
-<div>
-  <button onclick="togglePanel('budget')">
-    <strong>Budget Estimator</strong><br>
-    <span style="font-size: 12px; color: #666;">Estimate salary, fringe, and F&amp;A costs</span>
-  </button>
-  
-  <div id="budget" class="panel">
-    <button class="close-btn" onclick="togglePanel('budget')">✕</button>
-    <h3>Budget Estimator</h3>
-    
-    <label><strong>Personnel</strong></label>
-    <div id="personnel-rows"></div>
-    <button class="add-btn" onclick="addPersonnelRow()">+ Add person</button>
-
-    <label><strong>Non-personnel direct costs ($)</strong></label>
-    
-    <label for="equip-input">Equipment (over $5,000) — excluded from F&amp;A base</label>
-    <input type="number" id="equip-input" value="0" min="0" step="500" oninput="renderBudget()">
-    
-    <label for="travel-input">Travel</label>
-    <input type="number" id="travel-input" value="0" min="0" step="500" oninput="renderBudget()">
-    
-    <label for="participant-input">Participant support — excluded from F&amp;A</label>
-    <input type="number" id="participant-input" value="0" min="0" step="500" oninput="renderBudget()">
-    
-    <label for="other-direct-input">Materials, supplies &amp; other</label>
-    <input type="number" id="other-direct-input" value="0" min="0" step="500" oninput="renderBudget()">
-    
-    <label for="subaward-input">Subaward total (first $25K counts toward F&amp;A base)</label>
-    <input type="number" id="subaward-input" value="0" min="0" step="1000" oninput="renderBudget()">
-    
-    <label for="fa-input">F&amp;A rate</label>
-    <select id="fa-input" onchange="renderBudget()">
-      <option value="57.5">On-campus — 57.5%</option>
-      <option value="26">Off-campus — 26%</option>
-    </select>
-
-    <div class="panel-note">Year 1 estimate only. Uses MTDC logic.</div>
-    <div id="budget-results"></div>
-  </div>
-</div>
 
 <script>
-function togglePanel(id) {
-  var panel = document.getElementById(id);
-  var allPanels = document.querySelectorAll('.panel');
-  allPanels.forEach(function(p) { p.classList.remove('open'); });
-  if(panel) panel.classList.add('open');
-}
-
-// Timeline Calculator
-function renderTimeline(){
-  var RI_HOLIDAYS_2026 = ['2026-01-01','2026-01-19','2026-05-25','2026-06-19','2026-08-10','2026-09-07','2026-10-12','2026-11-03','2026-11-11','2026-11-26','2026-12-25'];
-  var input = document.getElementById('deadline-input').value;
-  var results = document.getElementById('timeline-results');
-  if(!input){ results.innerHTML = ''; return; }
-  var deadline = new Date(input + 'T12:00:00');
-  var milestones = [
-    { label:'Contact Pre-Award (recommended)', days:20 },
-    { label:'Draft proposal complete', days:14 },
-    { label:'Budget finalized', days:12 },
-    { label:'CELS internal review begins', days:12 },
-    { label:'Submitted to OSP', days:5 },
-    { label:'Sponsor deadline', days:0 }
-  ];
-  function isHoliday(d){ return RI_HOLIDAYS_2026.indexOf(d.toISOString().slice(0,10)) !== -1; }
-  function subtractBusinessDays(date, days){
-    var d = new Date(date), count = 0;
-    while(count < days){ d.setDate(d.getDate() - 1); if(d.getDay() !== 0 && d.getDay() !== 6 && !isHoliday(d)){ count++; } } return d;
-  }
-  function fmtDate(d){ return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' }); }
-  results.innerHTML = milestones.map(function(m){
-    var d = m.days === 0 ? deadline : subtractBusinessDays(deadline, m.days);
-    return '<div class="result-row"><span>' + m.label + '</span><strong>' + fmtDate(d) + '</strong></div>';
-  }).join('');
-}
-
-// Budget Calculator
-var PERSONNEL_ROLES = [
-  { label:'Faculty / Senior Personnel', fringe:35.2 },
-  { label:'Post-Doctoral Associate', fringe:38 },
-  { label:'Admin / Clerical Staff', fringe:35.2 },
-  { label:'Graduate Student (Academic Yr.)', fringe:16.78 },
-  { label:'Graduate Student (Summer)', fringe:7.65 },
-  { label:'Undergraduate Student', fringe:7.65 }
-];
-var personnelCount = 0;
-function addPersonnelRow(){
-  personnelCount++;
-  var id = 'p' + personnelCount;
-  var wrap = document.createElement('div');
-  wrap.id = 'row-' + id;
-  wrap.className = 'personnel-row';
-  var options = PERSONNEL_ROLES.map(function(r,i){ return '<option value="'+i+'">'+r.label+' ('+r.fringe+'%)</option>'; }).join('');
-  wrap.innerHTML = 
-    '<select class="p-role" data-id="'+id+'" onchange="renderBudget()">'+options+'</select>' +
-    '<input type="number" class="p-salary" data-id="'+id+'" value="60000" oninput="renderBudget()" placeholder="Salary">' +
-    '<input type="number" class="p-effort" data-id="'+id+'" value="10" oninput="renderBudget()" placeholder="%">' +
-    '<button type="button" class="remove-btn" onclick="document.getElementById(\'row-'+id+'\').remove();renderBudget()">Remove</button>';
-  document.getElementById('personnel-rows').appendChild(wrap);
-}
-function renderBudget(){
-  var fmt = function(n){ return '$' + n.toLocaleString('en-US', {maximumFractionDigits:0}); };
-  var totalSalary = 0, totalFringe = 0;
-  document.querySelectorAll('#personnel-rows > div').forEach(function(row){
-    var roleIdx = parseInt(row.querySelector('.p-role').value, 10);
-    var salary = parseFloat(row.querySelector('.p-salary').value) || 0;
-    var effort = parseFloat(row.querySelector('.p-effort').value) || 0;
-    var r = PERSONNEL_ROLES[roleIdx];
-    var cost = salary * (effort/100);
-    totalSalary += cost;
-    totalFringe += cost * (r.fringe/100);
+  /* --- Toggle Calculator Panels & Hide Library --- */
+  document.querySelectorAll('.tool-card[data-tool]').forEach(function(card){
+    card.addEventListener('click', function(){
+      var tool = card.getAttribute('data-tool');
+      var panel = document.getElementById('panel-' + tool);
+      var library = document.getElementById('resources-library');
+      var isOpen = panel.classList.contains('open');
+      
+      // Close all panels first
+      document.querySelectorAll('.tool-panel').forEach(function(p){ p.classList.remove('open'); });
+      
+      // Open the target if it wasn't already open
+      if(!isOpen){
+        panel.classList.add('open');
+        library.classList.add('hidden'); // Hide library when panel opens
+        panel.scrollIntoView({behavior:'smooth', block:'nearest'});
+      }
+    });
   });
-  var equip = parseFloat(document.getElementById('equip-input').value) || 0;
-  var travel = parseFloat(document.getElementById('travel-input').value) || 0;
-  var participant = parseFloat(document.getElementById('participant-input').value) || 0;
-  var otherDirect = parseFloat(document.getElementById('other-direct-input').value) || 0;
-  var subaward = parseFloat(document.getElementById('subaward-input').value) || 0;
-  var subawardMtdc = Math.min(subaward, 25000);
-  var faRate = parseFloat(document.getElementById('fa-input').value) || 0;
-  var totalDirect = totalSalary + totalFringe + equip + travel + participant + otherDirect + subaward;
-  var mtdc = totalSalary + totalFringe + travel + otherDirect + subawardMtdc;
-  var faCost = mtdc * (faRate/100);
-  var total = totalDirect + faCost;
-  var html = '<div class="result-row"><span>Salaries:</span><strong>' + fmt(totalSalary) + '</strong></div>';
-  html += '<div class="result-row"><span>Fringe:</span><strong>' + fmt(totalFringe) + '</strong></div>';
-  if(equip) html += '<div class="result-row"><span>Equipment:</span><strong>' + fmt(equip) + '</strong></div>';
-  if(travel) html += '<div class="result-row"><span>Travel:</span><strong>' + fmt(travel) + '</strong></div>';
-  if(participant) html += '<div class="result-row"><span>Participant support:</span><strong>' + fmt(participant) + '</strong></div>';
-  if(otherDirect) html += '<div class="result-row"><span>Materials/supplies:</span><strong>' + fmt(otherDirect) + '</strong></div>';
-  if(subaward) html += '<div class="result-row"><span>Subaward:</span><strong>' + fmt(subaward) + '</strong></div>';
-  html += '<div class="result-row total"><span>Total Direct:</span><strong>' + fmt(totalDirect) + '</strong></div>';
-  html += '<div class="result-row"><span>F&A Base (MTDC):</span><strong>' + fmt(mtdc) + '</strong></div>';
-  html += '<div class="result-row"><span>F&A ('+faRate+'%):</span><strong>' + fmt(faCost) + '</strong></div>';
-  html += '<div class="result-row total"><span>TOTAL REQUESTED:</span><strong>' + fmt(total) + '</strong></div>';
-  document.getElementById('budget-results').innerHTML = html;
+
+  document.querySelectorAll('.panel-close').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var library = document.getElementById('resources-library');
+      document.getElementById('panel-' + btn.getAttribute('data-close')).classList.remove('open');
+      library.classList.remove('hidden'); // Show library when panel closes
+    });
+  });
+
+  /* --- Proposal Timeline Calculator Logic --- */
+  var RI_HOLIDAYS_2026 = [
+    '2026-01-01', '2026-01-19', '2026-05-25', '2026-06-19', '2026-08-10', 
+    '2026-09-07', '2026-10-12', '2026-11-03', '2026-11-11', '2026-11-26', '2026-12-25'
+  ];
+  function isHoliday(d){
+    var iso = d.toISOString().slice(0,10);
+    return RI_HOLIDAYS_2026.indexOf(iso) !== -1;
+  }
+  function subtractBusinessDays(date, days){
+    var d = new Date(date);
+    var count = 0;
+    while(count < days){
+      d.setDate(d.getDate() - 1);
+      var day = d.getDay();
+      if(day !== 0 && day !== 6 && !isHoliday(d)){ count++; }
+    }
+    return d;
+  }
+  function fmtDate(d){
+    return d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+  }
+  function renderTimeline(){
+    var input = document.getElementById('deadline-input').value;
+    var results = document.getElementById('timeline-results');
+    if(!input){ results.innerHTML = ''; return; }
+    var deadline = new Date(input + 'T12:00:00');
+    var milestones = [
+      { label:'Contact Pre-Award (recommended)', days:20 },
+      { label:'Draft proposal complete', days:14 },
+      { label:'Budget finalized', days:12 },
+      { label:'CELS internal review begins (7 business days)', days:12 },
+      { label:'Internal review complete / submitted to OSP (5-day minimum)', days:5 },
+      { label:'Sponsor deadline', days:0 }
+    ];
+    var html = '';
+    milestones.forEach(function(m){
+      var d = m.days === 0 ? deadline : subtractBusinessDays(deadline, m.days);
+      html += '<div class="result-row' + (m.days===0 ? ' total':'') + '"><span class="label">' + m.label + '</span><span class="value">' + fmtDate(d) + '</span></div>';
+    });
+    results.innerHTML = html;
+  }
+  document.getElementById('deadline-input').addEventListener('change', renderTimeline);
+
+  /* --- Budget Estimator Logic --- */
+  var PERSONNEL_ROLES = [
+    { label:'Faculty / Senior Personnel', fringe:35.2 },
+    { label:'Post-Doctoral Associate', fringe:38 },
+    { label:'Admin / Clerical Staff', fringe:35.2 },
+    { label:'Graduate Student (Academic Yr.)', fringe:16.78 },
+    { label:'Graduate Student (Summer)', fringe:7.65 },
+    { label:'Undergraduate Student', fringe:7.65 }
+  ];
+  var personnelCount = 0;
+  function addPersonnelRow(){
+    personnelCount++;
+    var id = 'p' + personnelCount;
+    var wrap = document.createElement('div');
+    wrap.className = 'personnel-row';
+    wrap.id = 'row-' + id;
+    var options = PERSONNEL_ROLES.map(function(r,i){ return '<option value="'+i+'">'+r.label+' — '+r.fringe+'%</option>'; }).join('');
+    wrap.innerHTML =
+      '<div><span class="mini-label">Role</span><select class="p-role" data-id="'+id+'">'+options+'</select></div>' +
+      '<div><span class="mini-label">Salary / stipend ($)</span><input type="number" class="p-salary" data-id="'+id+'" value="60000" min="0" step="1000"></div>' +
+      '<div><span class="mini-label">% effort</span><input type="number" class="p-effort" data-id="'+id+'" value="10" min="0" max="100" step="1"></div>' +
+      '<button type="button" class="remove-row-btn" data-remove="'+id+'">Remove</button>';
+    document.getElementById('personnel-rows').appendChild(wrap);
+    
+    // Add listeners to new row inputs
+    wrap.querySelectorAll('select, input').forEach(function(el){
+      el.addEventListener('input', renderBudget);
+      el.addEventListener('change', renderBudget);
+    });
+    wrap.querySelector('[data-remove]').addEventListener('click', function(){
+      wrap.remove();
+      renderBudget();
+    });
+  }
+  document.getElementById('add-personnel').addEventListener('click', addPersonnelRow);
+  addPersonnelRow(); // Initialize with one row
+
+  function renderBudget(){
+    var fmt = function(n){ return '$' + n.toLocaleString('en-US', {maximumFractionDigits:0}); };
+
+    var totalSalary = 0, totalFringe = 0;
+    document.querySelectorAll('.personnel-row').forEach(function(row){
+      var roleIdx = parseInt(row.querySelector('.p-role').value, 10);
+      var salary = parseFloat(row.querySelector('.p-salary').value) || 0;
+      var effort = parseFloat(row.querySelector('.p-effort').value) || 0;
+      var r = PERSONNEL_ROLES[roleIdx];
+      var cost = salary * (effort/100);
+      totalSalary += cost;
+      totalFringe += cost * (r.fringe/100);
+    });
+
+    var equip = parseFloat(document.getElementById('equip-input').value) || 0;
+    var travel = parseFloat(document.getElementById('travel-input').value) || 0;
+    var participant = parseFloat(document.getElementById('participant-input').value) || 0;
+    var otherDirect = parseFloat(document.getElementById('other-direct-input').value) || 0;
+    var subaward = parseFloat(document.getElementById('subaward-input').value) || 0;
+    var subawardMtdc = Math.min(subaward, 25000);
+    var subawardExcluded = subaward - subawardMtdc;
+
+       var faSelect = document.getElementById('fa-input');
+var faCustom = document.getElementById('fa-custom-input');
+var faRate;
+if(faSelect.value === 'custom'){
+  faCustom.style.display = 'block';
+  faRate = parseFloat(faCustom.value) || 0;
+} else {
+  faCustom.style.display = 'none';
+  faRate = parseFloat(faSelect.value) || 0;
 }
-addPersonnelRow();
-renderBudget();
+    var totalDirect = totalSalary + totalFringe + equip + travel + participant + otherDirect + subaward;
+    // MTDC Base calculation: Salaries + Fringe + Travel + Other + (First 25k of Subaward)
+    var mtdc = totalSalary + totalFringe + travel + otherDirect + subawardMtdc; 
+    var faCost = mtdc * (faRate/100);
+    var total = totalDirect + faCost;
+
+    var html = '';
+    html += '<div class="result-row"><span class="label">Total salaries &amp; wages</span><span class="value">' + fmt(totalSalary) + '</span></div>';
+    html += '<div class="result-row"><span class="label">Total fringe benefits</span><span class="value">' + fmt(totalFringe) + '</span></div>';
+    if(equip) html += '<div class="result-row"><span class="label">Equipment</span><span class="value">' + fmt(equip) + '</span></div>';
+    if(travel) html += '<div class="result-row"><span class="label">Travel</span><span class="value">' + fmt(travel) + '</span></div>';
+    if(participant) html += '<div class="result-row"><span class="label">Participant support</span><span class="value">' + fmt(participant) + '</span></div>';
+    if(otherDirect) html += '<div class="result-row"><span class="label">Materials, supplies &amp; other</span><span class="value">' + fmt(otherDirect) + '</span></div>';
+    if(subaward) html += '<div class="result-row"><span class="label">Subaward (' + fmt(subawardMtdc) + ' in F&amp;A base' + (subawardExcluded ? ', ' + fmt(subawardExcluded) + ' excluded' : '') + ')</span><span class="value">' + fmt(subaward) + '</span></div>';
+    html += '<div class="result-row total"><span class="label">Total direct costs</span><span class="value">' + fmt(totalDirect) + '</span></div>';
+    html += '<div class="result-row"><span class="label">F&amp;A base (MTDC)</span><span class="value">' + fmt(mtdc) + '</span></div>';
+    html += '<div class="result-row"><span class="label">F&amp;A (' + faRate + '%)</span><span class="value">' + fmt(faCost) + '</span></div>';
+    html += '<div class="result-row total"><span class="label">Estimated total requested</span><span class="value">' + fmt(total) + '</span></div>';
+    document.getElementById('budget-results').innerHTML = html;
+  }
+  
+  // Listeners for all static inputs
+  ['equip-input','travel-input','participant-input','other-direct-input','subaward-input','fa-input'].forEach(function(id){
+    var el = document.getElementById(id);
+    el.addEventListener('input', renderBudget);
+    el.addEventListener('change', renderBudget);
+	document.getElementById('fa-custom-input').addEventListener('input', renderBudget);
+document.getElementById('fa-custom-input').addEventListener('change', renderBudget);
+  });
+  // Initial Render
+  renderBudget();
 </script>
 
 </body>
