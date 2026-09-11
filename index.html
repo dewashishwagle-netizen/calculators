@@ -232,6 +232,7 @@
     letter-spacing:.04em;
     margin:0 0 10px;
   }
+	
   .lib-col ul{
     list-style:none;
     margin:0; padding:0;
@@ -252,6 +253,21 @@
     .field-row{ grid-template-columns:1fr; }
     .lib-grid{ grid-template-columns:1fr; }
   }
+	/* NEW: Add at the end of your <style> section */
+
+#fa-custom-wrapper {
+  transition: opacity 0.2s ease;
+}
+
+.field-input:focus {
+  border-color: var(--keaney);
+  outline: none;
+}
+
+.add-row-btn {
+  margin-bottom: 12px;
+  margin-top: 6px;
+}
 </style>
 </head>
 <body>
@@ -325,14 +341,16 @@
         <label class="field-label small" for="subaward-input">Subaward total — only the first $25,000 per subaward counts toward the F&amp;A base</label>
         <input type="number" id="subaward-input" class="field-input" value="0" min="0" step="1000">
 
-        <label class="field-label" for="fa-input">F&amp;A rate</label>
+       <label class="field-label" for="fa-input">F&amp;A rate</label>
 <select id="fa-input" class="field-input">
   <option value="57.5">On-campus — 57.5%</option>
   <option value="26">Off-campus — 26%</option>
   <option value="custom">Custom — enter rate</option>
 </select>
-<input type="number" id="fa-custom-input" class="field-input" placeholder="Enter F&A rate (%)" min="0" max="100" step="0.1" style="display:none; margin-top:8px;">
-
+<div id="fa-custom-wrapper" style="display:none; margin-top:8px;">
+  <label class="field-label small" for="fa-custom-input" style="margin-top:0;">Enter F&A rate (%)</label>
+  <input type="number" id="fa-custom-input" class="field-input" placeholder="0.0" min="0" max="100" step="0.1">
+</div>
         <div class="panel-note">Year 1 estimate only, modeled on the CELS Budget Template's MTDC logic (equipment, participant support, and the portion of subawards over $25K are excluded from the F&amp;A base).</div>
         <div id="budget-results" class="results-list"></div>
       </div>
@@ -526,16 +544,19 @@
     var subawardMtdc = Math.min(subaward, 25000);
     var subawardExcluded = subaward - subawardMtdc;
 
-       var faSelect = document.getElementById('fa-input');
-var faCustom = document.getElementById('fa-custom-input');
-var faRate;
-if(faSelect.value === 'custom'){
-  faCustom.style.display = 'block';
-  faRate = parseFloat(faCustom.value) || 0;
-} else {
-  faCustom.style.display = 'none';
-  faRate = parseFloat(faSelect.value) || 0;
-}
+      /* NEW: Add after existing fa-input listener */
+document.getElementById('fa-input').addEventListener('change', function(){
+  var wrapper = document.getElementById('fa-custom-wrapper');
+  if(this.value === 'custom'){
+    wrapper.style.display = 'block';
+  } else {
+    wrapper.style.display = 'none';
+  }
+  renderBudget();
+});
+
+/* NEW: Also ensure custom input updates budget */
+document.getElementById('fa-custom-input').addEventListener('input', renderBudget);
     var totalDirect = totalSalary + totalFringe + equip + travel + participant + otherDirect + subaward;
     // MTDC Base calculation: Salaries + Fringe + Travel + Other + (First 25k of Subaward)
     var mtdc = totalSalary + totalFringe + travel + otherDirect + subawardMtdc; 
